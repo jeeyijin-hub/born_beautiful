@@ -11,6 +11,7 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
+
 def init_db():
     conn = get_db()
     conn.execute("""
@@ -45,17 +46,36 @@ def init_db():
 def index():
     return render_template('index.html')
 
+
 @app.route("/book", methods=["GET", "POST"])
 def book():
     if request.method == "POST":
-        name = request.form.get("name")
-        phone = request.form.get("phone")
+        name    = request.form.get("name")
+        phone   = request.form.get("phone")
         service = request.form.get("service")
-        date = request.form.get("date")
-        time = request.form.get("time")
-        notes = request.form.get("notes")
+        date    = request.form.get("date")
+        time    = request.form.get("time")
+        notes   = request.form.get("notes")
 
+        # 验证一：不能预约过去的日期
+        from datetime import date as date_type
+        today = date_type.today().isoformat()
+        if date < today:
+            flash("Please select a future date.", "danger")
+            return render_template("book.html")
+
+        # 验证二：同一时间不能重复预约
         conn = get_db()
+        existing = conn.execute("""
+            SELECT * FROM bookings 
+            WHERE date = ? AND time = ? AND status != 'cancelled'
+        """, (date, time)).fetchone()
+
+        if existing:
+            conn.close()
+            flash("This time slot is already booked. Please choose a different time.", "danger")
+            return render_template("book.html")
+
         conn.execute("""
             INSERT INTO bookings (name, phone, service, date, time, notes)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -66,11 +86,13 @@ def book():
         msg = f"New Booking!%0AName: {name}%0APhone: {phone}%0AService: {service}%0ADate: {date}%0ATime: {time}%0ANotes: {notes}"
         whatsapp_url = f"https://wa.me/60168783226?text={msg}"
 
-
         flash("Booking submitted successfully!", "success")
         return redirect(whatsapp_url)
 
-    return render_template('book.html')
+    from datetime import date as date_type
+    today = date_type.today().isoformat()
+    return render_template("book.html", today=today)
+    
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
@@ -100,6 +122,7 @@ def admin_dashboard():
     conn.close()
     return render_template("admin.html", bookings = bookings)
 
+
 @app.route("/admin/update/<int:booking_id>", methods=["POST"])
 def update_booking(booking_id):
     if not session.get("admin"):
@@ -112,6 +135,7 @@ def update_booking(booking_id):
     conn.close()
     flash("Booking updated successfully!", "success")
     return redirect(url_for("admin_dashboard"))
+
 
 @app.route("/admin/logout")
 def admin_logout():

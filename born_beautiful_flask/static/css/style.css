@@ -84,7 +84,7 @@ nav {
   top: 0;
   width: 100%;
   z-index: 100;
-  padding: 1.5rem 2rem;
+  padding: 1rem 2rem;
   background-color: rgba(253, 250, 246, 0.95);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid #EDE8E0;
@@ -98,8 +98,8 @@ nav {
   align-items: center;
 }
 
-.logo image{
-  height: 100px;
+.logo img{
+  height: 85px;
   width: auto;
   display: block;
 }
@@ -598,6 +598,7 @@ footer {
 #booking {
   background-color: #FDFAF6;
   min-height: 80vh;
+  padding-top: 120px;
 }
 
 #booking h2 {
@@ -672,4 +673,148 @@ footer {
   .form-row {
     grid-template-columns: 1fr;
   }
+}
+
+/* ============================================
+   ADMIN LOGIN
+   ============================================ */
+#admin-login {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  background-color: #FDFAF6;
+}
+
+.login-box {
+  max-width: 400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.login-box h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 2px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* ============================================
+   ADMIN DASHBOARD
+   ============================================ */
+#admin-dashboard {
+  background-color: #FDFAF6;
+  min-height: 80vh;
+  padding-top: 120px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.bookings-table {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+thead {
+  background-color: #2C2C2C;
+  color: #FDFAF6;
+}
+
+th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+td {
+  padding: 1rem;
+  border-bottom: 1px solid #EDE8E0;
+  vertical-align: middle;
+}
+
+tr:hover {
+  background-color: #F5EFE6;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-confirmed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+td select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #EDE8E0;
+  border-radius: 2px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+  background-color: #FDFAF6;
+  margin-right: 0.5rem;
+}
+
+.btn-small {
+  padding: 0.4rem 0.8rem;
+  background-color: #2C2C2C;
+  color: #FDFAF6;
+  border: none;
+  border-radius: 2px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+.btn-small:hover {
+  background-color: #8A7E72;
+}
+
+.no-bookings {
+  text-align: center;
+  padding: 4rem;
+  color: #8A7E72;
 }
