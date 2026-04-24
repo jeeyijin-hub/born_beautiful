@@ -14,7 +14,7 @@ def get_db():
 def init_db():
     conn = get_db()
     conn.execute("""
-        CREATE TABLE IF NOT EXISTS booksing(
+        CREATE TABLE IF NOT EXISTS bookings(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name  TEXT NOT NULL,
             phone TEXT NOT NULL,
@@ -57,7 +57,7 @@ def book():
 
         conn = get_db()
         conn.execute("""
-            INSERT INTO booksing (name, phone, service, date, time, notes)
+            INSERT INTO bookings (name, phone, service, date, time, notes)
             VALUES (?, ?, ?, ?, ?, ?)
         """, (name, phone, service, date, time, notes))
         conn.commit()
@@ -71,3 +71,55 @@ def book():
         return redirect(whatsapp_url)
 
     return render_template('book.html')
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        conn = get_db()
+        admin = conn.execute("SELECT * FROM admin WHERE username = ? AND password = ?", (username, password)).fetchone()
+        conn.close()
+
+        if admin:
+            session["admin"] = True
+            return redirect(url_for("admin_dashboard"))
+        else:
+            flash("Invalid credentials", "danger")
+    
+        return render_template("admin_login.html")
+    
+@app.route("/admin/dashboard")
+def admin_dashboard():
+    if not session.get("admin"):
+        return redirect(url_for("admin_login"))
+    
+    conn = get_db()
+    bookings = conn.execute("SELECT * FROM bookings ORDER BY date ASC, time ASC").fetchall()
+    conn.close()
+    return render_template("admin.html", bookings = bookings)
+
+@app.route("/admin/update/<int:booking_id>", methods=["POST"])
+def update_booking(booking_id):
+    if not session.get("admin"):
+        return redirect(url_for("admin_login"))
+    
+    status = request.form.get("status")
+    conn = get_db()
+    conn.execute("UPDATE bookings SET status = ? WHERE id = ?", (status, booking_id))
+    conn.commit()
+    conn.close()
+    flash("Booking updated successfully!", "success")
+    return redirect(url_for("admin_dashboard"))
+
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop("admin", None)
+    flash("Logged out successfully!", "success")
+    return redirect(url_for("admin_login"))
+
+#run
+if __name__ == "__main__":
+    init_db()
+    app.run(debug=True)
