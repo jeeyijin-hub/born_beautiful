@@ -1,0 +1,675 @@
+/* ============================================
+   RESET & BASE
+   ============================================ */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Jost', sans-serif;
+  background-color: #FDFAF6;
+  color: #2C2C2C;
+  line-height: 1.7;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+section {
+  padding: 100px 0;
+}
+
+.section-subtitle {
+  color: #3D3530;
+  font-size: 1rem;
+  margin-bottom: 3rem;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 1.5rem 2rem;
+  background-color: rgba(253, 250, 246, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #EDE8E0;
+}
+
+.nav-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo image{
+  height: 100px;
+  width: auto;
+  display: block;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.nav-links a {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #2C2C2C;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #8A7E72;
+}
+
+.nav-cta {
+  background-color: #2C2C2C;
+  color: #FDFAF6 !important;
+  padding: 0.6rem 1.4rem;
+  border-radius: 2px;
+}
+
+.nav-cta:hover {
+  background-color: #8A7E72 !important;
+  color: #FDFAF6 !important;
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 2rem;
+  background-size: cover;
+  background-position: center 80%;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+#hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+}
+
+.hero-content h1 {
+  margin-bottom: 1.5rem;
+  color: #FDFAF6;
+}
+
+.hero-content p {
+  font-size: 1.15rem;
+  color: rgba(253, 250, 246, 0.85);
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.03em;
+}
+
+/* ============================================
+   BUTTON
+   ============================================ */
+.btn {
+  display: inline-block;
+  background-color: #2C2C2C;
+  color: #FDFAF6;
+  padding: 1rem 2.5rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #8A7E72;
+}
+
+/* ============================================
+   SERVICES
+   ============================================ */
+#services {
+  background-color: #FDFAF6;
+  text-align: center;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.service-card {
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #EDE8E0;
+  transition: box-shadow 0.3s ease;
+  background-color: #FDFAF6;
+}
+
+.service-card:hover {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+.service-card-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+.service-card-body {
+  padding: 1.5rem;
+}
+
+/* ============================================
+   ABOUT
+   ============================================ */
+#about {
+  background-color: #F5EFE6;
+}
+
+#about p:last-child {
+  max-width: 650px;
+  margin: 0 auto;
+  color: #5C5550;
+  font-size: 1.05rem;
+}
+
+/* ============================================
+   ABOUT GRID
+   ============================================ */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+
+.about-img img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.about-content h2 {
+  margin-bottom: 0.5rem;
+}
+
+.about-content p {
+  color: #5C5550;
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+}
+
+.about-stats {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid #EDE8E0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  color: #2C2C2C;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color:  #5C5047;
+}
+
+@media (max-width: 768px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* ============================================
+   TESTIMONIALS
+   ============================================ */
+#testimonials {
+  background-color: #FDFAF6;
+  text-align: center;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.testimonial-card {
+  padding: 2.5rem;
+  border-left: 3px solid #8A7E72;
+  background-color: #F5EFE6;
+  text-align: left;
+  border-radius: 2px;
+}
+
+.testimonial-card p {
+  font-style: italic;
+  color: #5C5550;
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+}
+
+.testimonial-card span {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8A7E72;
+}
+
+/* ============================================
+   CONTACT
+   ============================================ */
+#contact {
+  background-color: #2C2C2C;
+  text-align: center;
+  color: #FDFAF6;
+}
+
+#contact h2 {
+  color: #FDFAF6;
+}
+
+#contact .section-subtitle {
+  color: #D4C9C0;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.contact-info p {
+  font-size: 1rem;
+  color: #E8E0D8;
+  letter-spacing: 0.03em;
+}
+
+.contact-info .btn {
+  margin-top: 1rem;
+  background-color: #FDFAF6;
+  color: #2C2C2C;
+}
+
+.contact-info .btn:hover {
+  background-color: #8A7E72;
+  color: #FDFAF6;
+}
+/* ============================================
+   SOCIAL LINKS
+   ============================================ */
+.social-links {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  justify-content: center;
+}
+
+.social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(253, 250, 246, 0.3);
+  color: #FDFAF6;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+  background-color: #FDFAF6;
+  color: #2C2C2C;
+  border-color: #FDFAF6;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+footer {
+  background-color: #1A1A1A;
+  color: #B8AFA8;
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+/* ============================================
+   HAMBURGER MENU
+   ============================================ */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: #2C2C2C;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #FDFAF6;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 1.5rem;
+    border-bottom: 1px solid #EDE8E0;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+}
+/* ============================================
+   SCROLL ANIMATION
+   ============================================ */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================
+   SERVICES EXTENDED
+   ============================================ */
+.service-duration {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8A7E72;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.service-price {
+  display: block;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #2C2C2C;
+}
+
+.service-price small {
+  font-size: 0.8rem;
+  color: #8A7E72;
+  font-weight: 400;
+}
+
+.services-cta {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.btn-outline {
+  display: inline-block;
+  border: 1px solid #2C2C2C;
+  color: #2C2C2C;
+  padding: 1rem 2.5rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+  background-color: #2C2C2C;
+  color: #FDFAF6;
+}
+
+/* ALL SERVICES TABLE */
+#all-services {
+  background-color: #F5EFE6;
+}
+
+.services-category {
+  margin-bottom: 3rem;
+}
+
+.services-category h3 {
+  border-bottom: 1px solid #EDE8E0;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.services-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.service-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr auto;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #FDFAF6;
+  border-radius: 4px;
+  align-items: center;
+}
+
+.service-row span {
+  display: block;
+  font-size: 0.75rem;
+  color: #8A7E72;
+  margin-top: 0.25rem;
+}
+
+.service-row .price {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.service-row .price small {
+  display: block;
+  font-size: 0.75rem;
+  color: #8A7E72;
+  font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  .service-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .service-row .price {
+    color: #8A7E72;
+  }
+}
+
+/* ============================================
+   BOOKING FORM
+   ============================================ */
+#booking {
+  background-color: #FDFAF6;
+  min-height: 80vh;
+}
+
+#booking h2 {
+  text-align: center;
+}
+
+#booking .section-subtitle {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.booking-form {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #2C2C2C;
+}
+
+.form-group label span {
+  text-transform: none;
+  color: #8A7E72;
+  font-size: 0.8rem;
+  letter-spacing: 0;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.85rem 1rem;
+  border: 1px solid #EDE8E0;
+  border-radius: 2px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.95rem;
+  color: #2C2C2C;
+  background-color: #FDFAF6;
+  transition: border-color 0.3s ease;
+  width: 100%;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #8A7E72;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.booking-form .btn {
+  width: 100%;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

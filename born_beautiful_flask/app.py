@@ -18,7 +18,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name  TEXT NOT NULL,
             phone TEXT NOT NULL,
-            sercive TEXT NOT NULL,
+            service TEXT NOT NULL,
             date TEXT NOT NULL,
             time TEXT NOT NULL,
             notes TEXT,
@@ -88,7 +88,7 @@ def admin_login():
         else:
             flash("Invalid credentials", "danger")
     
-        return render_template("admin_login.html")
+    return render_template("admin_login.html")
     
 @app.route("/admin/dashboard")
 def admin_dashboard():

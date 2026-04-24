@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+
+{% block title %}Book an Appointment | Born Beautiful{% endblock %}
+
+{% block content %}
+
+<section id="booking">
+  <div class="container">
+    <h2>Book an Appointment</h2>
+    <p class="section-subtitle">We'll confirm your booking via WhatsApp</p>
+
+    <form class="booking-form" action="{{ url_for('book') }}" method="POST">
+
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Your full name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="e.g. 016-8783226" required>
+      </div>
+
+      <div class="form-group">
+        <label for="service">Select Service</label>
+        <select id="service" name="service" required>
+          <option value="" disabled selected>Choose a treatment</option>
+          <optgroup label="Facial Treatments">
+            <option>Deep Cleansing Facial (90 mins) — RM200</option>
+            <option>Relaxing Facial (60 mins) — RM180</option>
+            <option>Refreshing Facial (90 mins) — RM280</option>
+            <option>Yunohana Lymphatic Facial (75 mins) — RM200</option>
+            <option>Treatment Set Facial (120 mins) — RM368</option>
+          </optgroup>
+          <optgroup label="Machine Enhancement">
+            <option>BHT Aquafuse (20 mins) — RM58</option>
+            <option>Ampoule Penetration (10 mins) — RM58</option>
+            <option>Yunohana Lymphatic Guasha (20 mins) — RM58</option>
+            <option>Cold Soothing (10 mins) — RM58</option>
+          </optgroup>
+          <optgroup label="Firming & Lifting">
+            <option>Warmth Touch Massage (30 mins) — RM99</option>
+            <option>Radio Frequency Firm (20 mins) — RM99</option>
+            <option>Dermal Firm Lift 3.0 (20 mins) — RM99</option>
+            <option>SMAS Deep Lift 4.5 (20 mins) — RM99</option>
+            <option>Excare DI EMS Muscle Firm (20 mins) — RM99</option>
+          </optgroup>
+          <optgroup label="Wellness Treatment">
+            <option>Hokutolite Stone Spa (60 mins) — RM99</option>
+            <option>True Warm Massage 30 mins — RM99</option>
+            <option>True Warm Massage 60 mins — RM189</option>
+            <option>True Warm Massage + Stone Spa (90 mins) — RM189</option>
+            <option>Magnetic Body Massage (60 mins) — RM168</option>
+            <option>Magnetic Body Massage + Stone Spa (120 mins) — RM239</option>
+            <option>Tai Chi Meridian Massage (60 mins) — RM168</option>
+            <option>Tai Chi Meridian + True Warm Massage (90 mins) — RM239</option>
+            <option>Tai Chi Meridian + Stone Spa (120 mins) — RM239</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date">Preferred Date</label>
+          <input type="date" id="date" name="date" required>
+        </div>
+        <div class="form-group">
+          <label for="time">Preferred Time</label>
+          <select id="time" name="time" required>
+            <option value="" disabled selected>Select time</option>
+            <option>9:00 AM</option>
+            <option>10:00 AM</option>
+            <option>11:00 AM</option>
+            <option>12:00 PM</option>
+            <option>1:00 PM</option>
+            <option>2:00 PM</option>
+            <option>3:00 PM</option>
+            <option>4:00 PM</option>
+            <option>5:00 PM</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Additional Notes <span>(optional)</span></label>
+        <textarea id="notes" name="notes" rows="3" placeholder="Any skin concerns or special requests?"></textarea>
+      </div>
+
+      <button type="submit" class="btn">Confirm Booking via WhatsApp</button>
+
+    </form>
+  </div>
+</section>
+
+{% endblock %}
