@@ -9,21 +9,29 @@
     <h2>Book an Appointment</h2>
     <p class="section-subtitle">We'll confirm your booking via WhatsApp</p>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
     <form class="booking-form" action="{{ url_for('book') }}" method="POST">
 
       <div class="form-group">
         <label for="name">Full Name</label>
-        <input type="text" id="name" name="name" placeholder="Your full name" required>
+        <input type="text" id="name" name="name" value="{{ form_data.get('name', '') }}" placeholder="Your full name" required>
       </div>
 
       <div class="form-group">
         <label for="phone">Phone Number</label>
-        <input type="tel" id="phone" name="phone" placeholder="e.g. 016-8783226" required>
+        <input type="tel" id="phone" name="phone" value="{{ form_data.get('phone', '') }}" placeholder="e.g. 016-8783226" required>
       </div>
 
       <div class="form-group">
         <label for="service">Select Service</label>
-        <select id="service" name="service" required>
+        <select id="service" name="service" value="{{ form_data.get('service', '') }}" required>
           <option value="" disabled selected>Choose a treatment</option>
           <optgroup label="Facial Treatments">
             <option>Deep Cleansing Facial (90 mins) — RM200</option>
@@ -62,28 +70,28 @@
       <div class="form-row">
         <div class="form-group">
           <label for="date">Preferred Date</label>
-          <input type="date" id="date" name="date" required min="{{ today }}">
+          <input type="date" id="date" name="date" value="{{ form_data.get('date', '') }}" required min="{{ today }}">
         </div>
         <div class="form-group">
           <label for="time">Preferred Time</label>
-          <select id="time" name="time" required>
+          <select id="time" name="time" value="{{ form_data.get('time', '') }}" required>
             <option value="" disabled selected>Select time</option>
-            <option>9:00 AM</option>
-            <option>10:00 AM</option>
-            <option>11:00 AM</option>
-            <option>12:00 PM</option>
-            <option>1:00 PM</option>
-            <option>2:00 PM</option>
-            <option>3:00 PM</option>
-            <option>4:00 PM</option>
-            <option>5:00 PM</option>
+            <option value="9:00 AM" {% if form_data.get('time') == '9:00 AM' %}selected{% endif %}>9:00 AM</option>
+            <option value="10:00 AM" {% if form_data.get('time') == '10:00 AM' %}selected{% endif %}>10:00 AM</option>
+            <option value="11:00 AM" {% if form_data.get('time') == '11:00 AM' %}selected{% endif %}>11:00 AM</option>
+            <option value="12:00 PM" {% if form_data.get('time') == '12:00 PM' %}selected{% endif %}>12:00 PM</option>
+            <option value="1:00 PM" {% if form_data.get('time') == '1:00 PM' %}selected{% endif %}>1:00 PM</option>
+            <option value="2:00 PM" {% if form_data.get('time') == '2:00 PM' %}selected{% endif %}>2:00 PM</option>
+            <option value="3:00 PM" {% if form_data.get('time') == '3:00 PM' %}selected{% endif %}>3:00 PM</option>
+            <option value="4:00 PM" {% if form_data.get('time') == '4:00 PM' %}selected{% endif %}>4:00 PM</option>
+            <option value="5:00 PM" {% if form_data.get('time') == '5:00 PM' %}selected{% endif %}>5:00 PM</option>
           </select>
         </div>
       </div>
 
       <div class="form-group">
         <label for="notes">Additional Notes <span>(optional)</span></label>
-        <textarea id="notes" name="notes" rows="3" placeholder="Any skin concerns or special requests?"></textarea>
+        <textarea id="notes" name="notes" rows="3" placeholder="Any skin concerns or special requests?">{{ form_data.get('notes', '') }}</textarea>
       </div>
 
       <button type="submit" class="btn">Confirm Booking via WhatsApp</button>

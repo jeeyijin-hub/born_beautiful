@@ -818,3 +818,20 @@ td select {
   padding: 4rem;
   color: #8A7E72;
 }
+
+.btn-delete {
+  padding: 0.4rem 0.8rem;
+  background-color: #dc3545;
+  color: #FDFAF6;
+  border: none;
+  border-radius: 2px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  margin-top: 0.4rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-delete:hover {
+  background-color: #a71d2a;
+}

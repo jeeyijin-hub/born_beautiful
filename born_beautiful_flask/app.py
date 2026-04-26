@@ -57,14 +57,14 @@ def book():
         time    = request.form.get("time")
         notes   = request.form.get("notes")
 
-        # 验证一：不能预约过去的日期
+        # date validation
         from datetime import date as date_type
         today = date_type.today().isoformat()
         if date < today:
             flash("Please select a future date.", "danger")
-            return render_template("book.html")
+            return render_template("book.html", today=today, form_data=request.form)
 
-        # 验证二：同一时间不能重复预约
+        # time slot validation
         conn = get_db()
         existing = conn.execute("""
             SELECT * FROM bookings 
@@ -74,7 +74,7 @@ def book():
         if existing:
             conn.close()
             flash("This time slot is already booked. Please choose a different time.", "danger")
-            return render_template("book.html")
+            return render_template("book.html", today=today, form_data=request.form)
 
         conn.execute("""
             INSERT INTO bookings (name, phone, service, date, time, notes)
@@ -91,7 +91,7 @@ def book():
 
     from datetime import date as date_type
     today = date_type.today().isoformat()
-    return render_template("book.html", today=today)
+    return render_template("book.html", today=today, form_data={})
     
 
 @app.route("/admin/login", methods=["GET", "POST"])
@@ -134,6 +134,19 @@ def update_booking(booking_id):
     conn.commit()
     conn.close()
     flash("Booking updated successfully!", "success")
+    return redirect(url_for("admin_dashboard"))
+
+
+@app.route("/admin/delete/<int:booking_id>", methods=["POST"])
+def delete_booking(booking_id):
+    if not session.get("admin"):
+        return redirect(url_for("admin_login"))
+    
+    conn = get_db()
+    conn.execute("DELETE FROM bookings WHERE id = ?", (booking_id,))
+    conn.commit()
+    conn.close()
+    flash("Booking deleted.", "success")
     return redirect(url_for("admin_dashboard"))
 
 
