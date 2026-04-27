@@ -52,7 +52,9 @@ def init_db():
     conn.commit()
     conn.close()
 
-
+with app.app_context():
+    init_db()
+    
 @app.route("/")
 def index():
     return render_template('index.html')
@@ -169,5 +171,4 @@ def admin_logout():
 
 #run
 if __name__ == "__main__":
-    init.db()
     app.run(debug=True)
