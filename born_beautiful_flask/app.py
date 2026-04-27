@@ -41,8 +41,9 @@ def init_db():
     """)
 
     admin = conn.execute("SELECT * FROM admin WHERE username = 'admin'").fetchone()
+    admin_password = os.environ.get("ADMIN_PASSWORD", "bornbeautiful2026")
     if not admin:
-        conn.execute("INSERT INTO admin (username, password) VALUES (?, ?)", ('admin', generate_password_hash('bornbeautiful2026')))
+        conn.execute("INSERT INTO admin (username, password) VALUES (?, ?)", ('admin', generate_password_hash(admin_password)))
     conn.commit()
     conn.close()
 
@@ -106,17 +107,17 @@ def admin_login():
         password = request.form.get("password")
 
         conn = get_db()
-        admin = conn.execute("SELECT * FROM admin WHERE username = ? AND password = ?", (username, password)).fetchone()
+        admin = conn.execute("SELECT * FROM admin WHERE username = ?", (username,)).fetchone()
         conn.close()
-
-        if admin and check_password_hash('bornbeautiful2026', password):
-            session["admin"] = True
-            return redirect(url_for("admin_dashboard"))
+        if admin and check_password_hash(admin["password"], password):
+          session["admin"] = True
+          return redirect(url_for("admin_dashboard"))
         else:
-            flash("Invalid credentials", "danger")
+          flash("Invalid credentials", "danger")
     
     return render_template("admin_login.html")
     
+
 @app.route("/admin/dashboard")
 def admin_dashboard():
     if not session.get("admin"):
