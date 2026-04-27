@@ -42,7 +42,6 @@ def init_db():
 
     admin = conn.execute("SELECT * FROM admin WHERE username = 'admin'").fetchone()
     admin_password = os.environ.get("ADMIN_PASSWORD", "bornbeautiful2026")
-    print(f"Admin password from env: {admin_password}")
     if not admin:
         conn.execute("INSERT INTO admin (username, password) VALUES (?, ?)", ('admin', generate_password_hash(admin_password)))
 
@@ -54,7 +53,7 @@ def init_db():
 
 with app.app_context():
     init_db()
-    
+
 @app.route("/")
 def index():
     return render_template('index.html')
@@ -71,11 +70,25 @@ def book():
         notes   = request.form.get("notes")
 
         # date validation
-        from datetime import date as date_type
+        from datetime import date as date_type, datetime
         today = date_type.today().isoformat()
+        now = datetime.now()
+
+        #date and time validation
         if date < today:
             flash("Please select a future date.", "danger")
             return render_template("book.html", today=today, form_data=request.form)
+        
+        if date == today:
+            time_map = {
+           "9:00 AM": 9, "10:00 AM": 10, "11:00 AM": 11,
+            "12:00 PM": 12, "1:00 PM": 13, "2:00 PM": 14,
+            "3:00 PM": 15, "4:00 PM": 16, "5:00 PM": 17
+            }
+            selected_hour = time_map.get(time, 0)
+            if selected_hour <= now.hour:
+                flash("This time slot has already passed. Please select a future time.", "danger")
+                return render_template("book.html", today=today, form_data=request.form)
 
         # time slot validation
         conn = get_db()
