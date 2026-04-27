@@ -44,6 +44,10 @@ def init_db():
     admin_password = os.environ.get("ADMIN_PASSWORD", "bornbeautiful2026")
     if not admin:
         conn.execute("INSERT INTO admin (username, password) VALUES (?, ?)", ('admin', generate_password_hash(admin_password)))
+
+    else:
+        conn.execute("UPDATE admin SET password = ? WHERE username = 'admin'",(generate_password_hash(admin_password),))
+        
     conn.commit()
     conn.close()
 
