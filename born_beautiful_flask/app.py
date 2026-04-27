@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_compress import Compress
 
 app = Flask(__name__)
 app.secret_key = "bornbeautiful2026"
+Compress(app)
 
 #database
 def get_db():
@@ -37,7 +40,7 @@ def init_db():
 
     admin = conn.execute("SELECT * FROM admin WHERE username = 'admin'").fetchone()
     if not admin:
-        conn.execute("INSERT INTO admin (username, password) VALUES ('admin', 'bornbeautiful2026')")
+        conn.execute("INSERT INTO admin (username, password) VALUES (?, ?)", ('admin', generate_password_hash('bornbeautiful2026')))
     conn.commit()
     conn.close()
 
@@ -104,7 +107,7 @@ def admin_login():
         admin = conn.execute("SELECT * FROM admin WHERE username = ? AND password = ?", (username, password)).fetchone()
         conn.close()
 
-        if admin:
+        if admin and check_password_hash('bornbeautiful2026', password):
             session["admin"] = True
             return redirect(url_for("admin_dashboard"))
         else:

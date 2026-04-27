@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Born Beautiful Beauty Centre — Premium facial and beauty treatments in Kuching, Sarawak. Book your appointment today. Tuesday–Sunday 9am–6pm." />
   <title>{% block title %}Born Beautiful{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,7 +15,7 @@
   <nav>
     <div class="nav-container">
       <a href="{{ url_for('index') }}" class="logo">
-        <img src="{{ url_for('static', filename='images/logo.webp') }}" alt="Born Beautiful" height="85">
+        <img src="{{ url_for('static', filename='images/logo.webp') }}" alt="Born Beautiful" height="70" width="70">
       </a>
       <ul class="nav-links">
         <li><a href="{{ url_for('index') }}#about">About</a></li>
@@ -46,6 +47,6 @@
     <p>© 2026 Born Beautiful Beauty Centre. All rights reserved.</p>
   </footer>
 
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 </body>
 </html>
