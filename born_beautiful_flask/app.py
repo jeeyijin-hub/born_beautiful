@@ -109,10 +109,11 @@ def book():
         conn.commit()
         conn.close()
 
+        flash("Booking submitted successfully!", "success")
+
         msg = f"New Booking!%0AName: {name}%0APhone: {phone}%0AService: {service}%0ADate: {date}%0ATime: {time}%0ANotes: {notes}"
         whatsapp_url = f"https://wa.me/60168783226?text={msg}"
 
-        flash("Booking submitted successfully!", "success")
         return redirect(whatsapp_url)
 
     from datetime import date as date_type
