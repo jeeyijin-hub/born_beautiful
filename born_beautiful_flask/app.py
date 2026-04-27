@@ -3,9 +3,11 @@ import sqlite3
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_compress import Compress
+import os
+
 
 app = Flask(__name__)
-app.secret_key = "bornbeautiful2026"
+app.secret_key = os.environ.get("SECRET_KEY", "dev-key-only")
 Compress(app)
 
 #database
