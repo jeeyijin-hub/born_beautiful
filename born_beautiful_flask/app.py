@@ -10,9 +10,6 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-key-only")
 Compress(app)
 
-with app.app_context():
-    init_db()
-
 #database
 def get_db():
     conn = sqlite3.connect('database.db')
@@ -172,4 +169,5 @@ def admin_logout():
 
 #run
 if __name__ == "__main__":
+    init.db()
     app.run(debug=True)
