@@ -69,3 +69,26 @@ Admin login: `/admin/login`
 - `templates/` — HTML templates using Jinja2
 - `static/` — CSS, JavaScript, images, fonts
 - `database.db` — SQLite database
+
+## Challenges
+
+Building this project came with several challenges that helped me grow as a developer.
+
+The first major challenge was deploying Flask to Railway. Unlike static sites on Netlify, Flask requires a production WSGI server. I had to learn how to configure Gunicorn, set up a Procfile, and manage environment variables for security — keeping sensitive data like passwords and secret keys out of the GitHub repository.
+
+The second challenge was database migration. I initially used SQLite for development, but discovered that SQLite files are lost on every Railway redeployment. This would have caused all customer booking data to disappear every time I updated the code. I solved this by migrating to PostgreSQL using Flask-SQLAlchemy, which also taught me how to write database-agnostic code that works with both SQLite locally and PostgreSQL in production.
+
+The third challenge was Lighthouse performance optimization. Early versions of the site scored 85-87 on Performance due to Google Fonts blocking the page render. I solved this by self-hosting the fonts locally, which eliminated the external network request and brought the score up to 100.
+
+## Future Improvements
+
+- Add email notifications for booking confirmations
+- Add a calendar view in the admin dashboard to visualize bookings
+- Add Google Maps embed in the contact section
+- Support multiple staff members with individual schedules
+- Add a promotions page that the salon owner can update from the admin dashboard
+- Implement Google Analytics to track website visitors and booking conversion rates
+
+## Acknowledgements
+
+Built as the CS50x 2026 final project by Jee Yi Jin from Kuching, Sarawak, Malaysia. Special thanks to the CS50 team at Harvard University for providing an excellent introduction to computer science.
