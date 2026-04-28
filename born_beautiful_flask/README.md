@@ -3,7 +3,7 @@
 i build a full-stack web application for a beauty salon in Kuching, Sarawak, Malaysia. Built as the final project for CS50x 2026.
 
 ## Video Demo
-[Insert YouTube link here]
+https://youtu.be/0qyintfZkLA
 
 ## Description
 

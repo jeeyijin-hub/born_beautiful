@@ -8,7 +8,7 @@ import os
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-key-only")
 
-# 数据库配置
+# database
 database_url = os.environ.get("DATABASE_URL", "sqlite:///database.db")
 if database_url.startswith("postgres://"):
     database_url = database_url.replace("postgres://", "postgresql://", 1)
