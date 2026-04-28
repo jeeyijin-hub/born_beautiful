@@ -1,66 +1,68 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-import sqlite3
-from datetime import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
 from flask_compress import Compress
+from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date as date_type, datetime
 import os
-
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-key-only")
+
+# 数据库配置
+database_url = os.environ.get("DATABASE_URL", "sqlite:///database.db")
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
 Compress(app)
 
-#database
-def get_db():
-    conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+# MODELS
+class Booking(db.Model):
+    __tablename__ = "bookings"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Text, nullable=False)
+    phone = db.Column(db.Text, nullable=False)
+    service = db.Column(db.Text, nullable=False)
+    date = db.Column(db.Text, nullable=False)
+    time = db.Column(db.Text, nullable=False)
+    notes = db.Column(db.Text)
+    status = db.Column(db.Text, default="pending")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+class Admin(db.Model):
+    __tablename__ = "admin"
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.Text, nullable=False)
+    password = db.Column(db.Text, nullable=False)
 
-def init_db():
-    conn = get_db()
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS bookings(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name  TEXT NOT NULL,
-            phone TEXT NOT NULL,
-            service TEXT NOT NULL,
-            date TEXT NOT NULL,
-            time TEXT NOT NULL,
-            notes TEXT,
-            status TEXT DEFAULT 'pending',
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP
-        )   
-    """)
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS admin (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL,
-            password TEXT NOT NULL
-        )
-    """)
-
-    admin = conn.execute("SELECT * FROM admin WHERE username = 'admin'").fetchone()
-    admin_password = os.environ.get("ADMIN_PASSWORD", "bornbeautiful2026")
-    if not admin:
-        conn.execute("INSERT INTO admin (username, password) VALUES (?, ?)", ('admin', generate_password_hash(admin_password)))
-
-    else:
-        conn.execute("UPDATE admin SET password = ? WHERE username = 'admin'",(generate_password_hash(admin_password),))
-
-    conn.commit()
-    conn.close()
 
 with app.app_context():
-    init_db()
+    db.create_all()
+    admin_password = os.environ.get("ADMIN_PASSWORD", "bornbeautiful2026")
+    existing = Admin.query.filter_by(username="admin").first()
+    if not existing:
+        admin = Admin(
+            username="admin",
+            password=generate_password_hash(admin_password)
+        )
+        db.session.add(admin)
+        db.session.commit()
+    else:
+        existing.password = generate_password_hash(admin_password)
+        db.session.commit()
 
+# ROUTES
 @app.route("/")
 def index():
-    return render_template('index.html')
-
+    return render_template("index.html")
 
 @app.route("/book", methods=["GET", "POST"])
 def book():
+    from datetime import date as date_type, datetime
+    today = date_type.today().isoformat()
+
     if request.method == "POST":
         name    = request.form.get("name")
         phone   = request.form.get("phone")
@@ -69,57 +71,43 @@ def book():
         time    = request.form.get("time")
         notes   = request.form.get("notes")
 
-        # date validation
-        from datetime import date as date_type, datetime
-        today = date_type.today().isoformat()
         now = datetime.now()
 
-        #date and time validation
         if date < today:
             flash("Please select a future date.", "danger")
             return render_template("book.html", today=today, form_data=request.form)
-        
+
         if date == today:
             time_map = {
-           "9:00 AM": 9, "10:00 AM": 10, "11:00 AM": 11,
-            "12:00 PM": 12, "1:00 PM": 13, "2:00 PM": 14,
-            "3:00 PM": 15, "4:00 PM": 16, "5:00 PM": 17
+                "9:00 AM": 9, "10:00 AM": 10, "11:00 AM": 11,
+                "12:00 PM": 12, "1:00 PM": 13, "2:00 PM": 14,
+                "3:00 PM": 15, "4:00 PM": 16, "5:00 PM": 17
             }
             selected_hour = time_map.get(time, 0)
             if selected_hour <= now.hour:
                 flash("This time slot has already passed. Please select a future time.", "danger")
                 return render_template("book.html", today=today, form_data=request.form)
 
-        # time slot validation
-        conn = get_db()
-        existing = conn.execute("""
-            SELECT * FROM bookings 
-            WHERE date = ? AND time = ? AND status != 'cancelled'
-        """, (date, time)).fetchone()
+        existing = Booking.query.filter_by(date=date, time=time).filter(
+            Booking.status != "cancelled"
+        ).first()
 
         if existing:
-            conn.close()
             flash("This time slot is already booked. Please choose a different time.", "danger")
             return render_template("book.html", today=today, form_data=request.form)
 
-        conn.execute("""
-            INSERT INTO bookings (name, phone, service, date, time, notes)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (name, phone, service, date, time, notes))
-        conn.commit()
-        conn.close()
-
-        flash("Booking submitted successfully!", "success")
+        booking = Booking(
+            name=name, phone=phone, service=service,
+            date=date, time=time, notes=notes
+        )
+        db.session.add(booking)
+        db.session.commit()
 
         msg = f"New Booking!%0AName: {name}%0APhone: {phone}%0AService: {service}%0ADate: {date}%0ATime: {time}%0ANotes: {notes}"
         whatsapp_url = f"https://wa.me/60168783226?text={msg}"
-
         return redirect(whatsapp_url)
 
-    from datetime import date as date_type
-    today = date_type.today().isoformat()
     return render_template("book.html", today=today, form_data={})
-    
 
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
@@ -127,62 +115,55 @@ def admin_login():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        conn = get_db()
-        admin = conn.execute("SELECT * FROM admin WHERE username = ?", (username,)).fetchone()
-        conn.close()
-        if admin and check_password_hash(admin["password"], password):
-          session["admin"] = True
-          return redirect(url_for("admin_dashboard"))
+        admin = Admin.query.filter_by(username=username).first()
+
+        if admin and check_password_hash(admin.password, password):
+            session["admin"] = True
+            return redirect(url_for("admin_dashboard"))
         else:
-          flash("Invalid credentials", "danger")
-    
+            flash("Invalid credentials", "danger")
+
     return render_template("admin_login.html")
-    
 
 @app.route("/admin/dashboard")
 def admin_dashboard():
     if not session.get("admin"):
         return redirect(url_for("admin_login"))
-    
-    conn = get_db()
-    bookings = conn.execute("SELECT * FROM bookings ORDER BY date ASC, time ASC").fetchall()
-    conn.close()
-    return render_template("admin.html", bookings = bookings)
 
+    bookings = Booking.query.order_by(Booking.date.asc(), Booking.time.asc()).all()
+    return render_template("admin.html", bookings=bookings)
 
 @app.route("/admin/update/<int:booking_id>", methods=["POST"])
 def update_booking(booking_id):
     if not session.get("admin"):
         return redirect(url_for("admin_login"))
-    
-    status = request.form.get("status")
-    conn = get_db()
-    conn.execute("UPDATE bookings SET status = ? WHERE id = ?", (status, booking_id))
-    conn.commit()
-    conn.close()
+
+    booking = Booking.query.get_or_404(booking_id)
+    booking.status = request.form.get("status")
+    db.session.commit()
     flash("Booking updated successfully!", "success")
     return redirect(url_for("admin_dashboard"))
-
 
 @app.route("/admin/delete/<int:booking_id>", methods=["POST"])
 def delete_booking(booking_id):
     if not session.get("admin"):
         return redirect(url_for("admin_login"))
-    
-    conn = get_db()
-    conn.execute("DELETE FROM bookings WHERE id = ?", (booking_id,))
-    conn.commit()
-    conn.close()
+
+    booking = Booking.query.get_or_404(booking_id)
+    db.session.delete(booking)
+    db.session.commit()
     flash("Booking deleted.", "success")
     return redirect(url_for("admin_dashboard"))
-
 
 @app.route("/admin/logout")
 def admin_logout():
     session.pop("admin", None)
-    flash("Logged out successfully!", "success")
     return redirect(url_for("admin_login"))
 
-#run
+@app.route("/sitemap.xml")
+def sitemap():
+    from flask import send_from_directory
+    return send_from_directory(".", "sitemap.xml")
+
 if __name__ == "__main__":
     app.run(debug=True)
